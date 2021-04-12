@@ -50,7 +50,7 @@
                                     </div>
 
 
-                                    <div class="col-md-6">
+                                    <div class="form-group">
                                         <label for="">Department</label>
                                         <select name="department_id" class="form-control">
                                             <option hidden disabled selected value> -- select an option -- </option>
@@ -66,9 +66,7 @@
                                             </div>
                                         @enderror
                                     </div>
-                            </div>
 
-                            <div class="col-md-6">
 
                                 <div class="form-group">
                                     <label for="role">Role</label>
@@ -91,7 +89,6 @@
                                         </div>
                                     @enderror
                                 </div>
-                            </div>
 
                             <div class="form-group">
                                 <label for="">Salary</label>

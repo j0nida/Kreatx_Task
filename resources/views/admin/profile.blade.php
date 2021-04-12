@@ -8,6 +8,8 @@
                 <div class="col-md-6 mx-auto">
                     <div class="card card-primary">
                         <div class="card-header">
+                            @include('alerts')
+
                             <h5 class="text-center mt-2">My Profile</h5>
                         </div>
                         <div class="card-body">
@@ -39,8 +41,16 @@
                             </table>
                         </div>
                         <div class="card-footer text-center">
-                            <a href="{{ route('employee.edit', $user->id) }}" class="btn btn-flat btn-primary">Edit
+                            <a href="{{ route('admin.profile.edit') }}" class="btn btn-flat btn-primary">Edit
                                 Profile</a>
+                        </div>
+                        <div class="card-footer text-center">
+                            <form method="post" action="{{ route('admin.delete') }}"
+                                enctype="multipart/form-data">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-flat btn-danger">Delete Account</button>
+                            </form>
                         </div>
                     </div>
                 </div>

@@ -25,7 +25,8 @@
             </div>
         </div>
     </div>
-    <div class="row">
+
+    {{-- <div class="row">
         <div class="col-md-3">
             <div class="card bg-dark text-white" style="background-color:#224abe !important">
                 <h1 class="card-title text-center">
@@ -37,10 +38,10 @@
                 </h1>
             </div>
         </div>
-    </div>
+    </div> --}}
 @endsection
 
-@section('scripts')
+{{-- @section('scripts')
     <script>
         $(document).ready(function() {
             todayDate();
@@ -57,4 +58,4 @@
         }
 
     </script>
-@endsection
+@endsection --}}

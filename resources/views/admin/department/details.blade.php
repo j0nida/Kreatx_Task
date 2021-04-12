@@ -82,7 +82,7 @@
                 orderCellsTop: true,
                 fixedHeader: true,
                 "order": [
-                    [3, "desc"]
+                    [0, "asc"]
                 ],
             });
 

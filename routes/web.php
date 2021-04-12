@@ -32,6 +32,9 @@ Route::middleware("admin")->group(function () {
     Route::get("/departments", [App\Http\Controllers\Admin\DepartmentsController::class, "index"])->name("departments");
     Route::get("/departments/details", [App\Http\Controllers\Admin\DepartmentsController::class, "details"])->name("departments.details");
     Route::get("/admin/profile", [App\Http\Controllers\Admin\AdminsController::class, "profile"])->name("admin.profile");
+    Route::get("/admin/profile/edit", [App\Http\Controllers\Admin\AdminsController::class, "edit"])->name("admin.profile.edit");
+    Route::put("/admin/profile/update", [App\Http\Controllers\Admin\AdminsController::class, "update"])->name("admin.profile.update");
+    Route::delete("/admin/profile/destroy", [App\Http\Controllers\Admin\AdminsController::class, "destroy"])->name("admin.delete");
     Route::get("/admin/user/create", [App\Http\Controllers\Admin\UsersController::class, "create"])->name("admin.user.create");
     Route::post("/admin/user/store", [App\Http\Controllers\Admin\UsersController::class, "store"])->name("admin.user.store");
     Route::get("/admin/user/{user}/edit", [App\Http\Controllers\Admin\UsersController::class, "edit"])->name("admin.user.edit");
