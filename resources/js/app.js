@@ -4,21 +4,14 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require('./bootstrap');
+require("./bootstrap");
 
-window.Vue = require('vue').default;
+window.Vue = require("vue").default;
 
+import VueChatScroll from "vue-chat-scroll";
+Vue.use(VueChatScroll);
+Vue.use(require("vue-moment"));
 
-import VueChatScroll from 'vue-chat-scroll'
-Vue.use(VueChatScroll)
-// Vue.use(require('vue-resource'));
-
-// Vue.http.interceptors.push(function (request, next) {
-//     if (_this.socketId()) {
-//         request.headers['X-Socket-ID'] = _this.socketId();
-//     }
-//     next();
-// });
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -27,11 +20,16 @@ Vue.use(VueChatScroll)
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
 
-const files = require.context('./', true, /\.vue$/i)
-files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
-
-// Vue.component('chat', require('./components/ChatsComponent.vue').default);
-// Vue.component('chat-form', require('./components/ChatForm.vue').default);
+const files = require.context("./", true, /\.vue$/i);
+files.keys().map(key =>
+    Vue.component(
+        key
+            .split("/")
+            .pop()
+            .split(".")[0],
+        files(key).default
+    )
+);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -39,6 +37,6 @@ files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
- const app = new Vue({
-    el: '#app',
+const app = new Vue({
+    el: "#app"
 });

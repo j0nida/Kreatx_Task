@@ -2,9 +2,11 @@
 
 namespace App\Http\Middleware;
 
-use Auth;
+
+// use Auth;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class Admin
 {

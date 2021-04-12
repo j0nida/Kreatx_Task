@@ -34,6 +34,7 @@
         "socket.io": "^4.0.1",
         "socket.io-client": "^4.0.1",
         "vue-chat-scroll": "^1.4.0",
+        "vue-moment": "^4.1.0",
         "vue-resource": "^1.5.2"
     }
 }

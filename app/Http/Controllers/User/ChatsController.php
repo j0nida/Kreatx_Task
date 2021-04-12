@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\User;
+
 use App\Http\Controllers\Controller;
 use App\Models\Message;
 use App\Events\ChatMessageWasReceived;
@@ -17,23 +18,24 @@ class ChatsController extends Controller
 
     public function index()
     {
-        $messages=Message::with('user')->get();
-        return view('user.chats',['messages'=>$messages]);
+        $messages = Message::with('user')->get();
+        return view('user.chats', ['messages' => $messages]);
     }
-    
-    public function get_all_messages(){
+
+    public function get_all_messages()
+    {
         return Message::with('user')->get();
     }
-    
+
     public function send_message(Request $request)
     {
-        if(!empty($request->message)){
-         $message = auth()->user()->messages()->create([
-             'content' => $request->message
+        if (!empty($request->message)) {
+            $message = auth()->user()->messages()->create([
+                'content' => $request->message
             ]);
-        broadcast(new ChatMessageWasReceived($message->load('user')));
-         
-        return ['status' => 'ok'];
-         }
+            broadcast(new ChatMessageWasReceived($message->load('user')))->toOthers();
+
+            return ['status' => 'ok'];
+        }
     }
 }
