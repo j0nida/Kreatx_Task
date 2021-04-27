@@ -10,14 +10,16 @@
                     <div class="card-header">List of Departments</div>
                     <div class="card-body">
                         @foreach ($depts as $dept)
-                            <ul>
+                            {{-- @if ($dept->deleted==1) --}}
+                                <ul>
                                 <a href="{{ route('dept.users', $dept->id) }}">
                                     <li>{{ $dept->name }}</li>
                                 </a>
                                 @if (count($dept->children))
                                     @include('admin.department.subDeptList',['subDept' => $dept->children])
-                                @endif
-                            </ul>
+                                    @endif
+                                </ul>
+                            {{-- @endif --}}
                         @endforeach
                     </div>
                 </div>

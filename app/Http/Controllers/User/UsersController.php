@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Models\Department;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+
 
 
 class UsersController extends Controller
@@ -40,16 +42,24 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit()
     {
         // 
+        $user=User::findOrFail(Auth::id());
+        if($user->deleted==0 ){
         return view(
             "user.edit",
             [
-                'user' => User::findOrFail($id),
-                'departments' => Department::all(),
+                'user' => $user,
+                'departments' => Department::where('deleted',0),
             ]
         );
+        }else{
+            request()->session()->flash('error', 'This account does not exist');
+            return back();
+    
+        }
+
     }
 
     /**
@@ -59,7 +69,7 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         //
         $this->validate($request, [
@@ -69,7 +79,7 @@ class UsersController extends Controller
             "photo" => ["image", "nullable"]
         ]);
 
-        $user = User::findOrFail($id);
+        $user = User::findOrFail(Auth::id());
         $user->name = $request->name;
         $user->age = $request->age;
         $user->salary = $request->salary;
@@ -81,7 +91,7 @@ class UsersController extends Controller
         }
         $user->save();
         $request->session()->flash('success', 'Your profile has been successfully updated!');
-        return redirect()->route('employee.profile', $id);
+        return redirect()->route('employee.profile');
     }
 
     /**
@@ -90,14 +100,19 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy()
     {
         //
-        $user = User::findOrFail($id);
+        $user = User::findOrFail(Auth::id());
+        if($user->deleted==0){
 
-        $user->delete();
-
+        $user->deleted=1;
+        $user->save();
+        Auth::logout();
+        Session::flush();
+        Session::regenerate();
         request()->session()->flash('success', 'Your account has been successfully deleted');
         return redirect()->route('login');
+        }
     }
 }

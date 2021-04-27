@@ -16,22 +16,30 @@ class DepartmentsController extends Controller
 
     public function index()
     {
-        $depts = Department::with('children')->whereNull('parent_id')->get();
-
+        $depts = Department::where("deleted",0)->with('childrenRecursive') ->whereNull('parent_id')->get();
 
         return view("admin.department.index", ['depts' => $depts]);
     }
 
     public function details()
     {
-        $depts = Department::paginate(10);
+        $depts = Department::where('deleted', 0)->paginate(10);
         return view("admin.department.details", ["depts" => $depts]);
     }
 
     public function edit($dept_id)
     {
-
-        return view("admin.department.edit", ['department' => Department::findOrFail($dept_id)]);
+        $dept = Department::findOrFail($dept_id);
+        if ($dept->deleted == 0) {
+            return view("admin.department.edit", [
+                'department' => $dept,
+                'departments' => Department::where('deleted', 0)
+                ->where('id','!=',$dept->id)
+                ->get()]);
+        }else{
+            request()->session()->flash('error', 'This department does not exist');
+            return redirect()->route('departments.details');
+        }
     }
 
     /**
@@ -52,6 +60,7 @@ class DepartmentsController extends Controller
         $dept = Department::findOrFail($id);
         $dept->name = $request->name;
         $dept->description = $request->desc;
+        $dept->parent_id=$request->parent_id;
         $dept->save();
         $request->session()->flash('success', 'Department has been successfully updated!');
         return redirect()->route('departments.details');
@@ -67,7 +76,7 @@ class DepartmentsController extends Controller
     {
         //
         return view("admin.department.create", [
-            'departments' => Department::all(),
+            'departments' => Department::where('deleted', 0)->get(),
         ]);
     }
 
@@ -83,6 +92,7 @@ class DepartmentsController extends Controller
         $this->validate($request, [
             'name' => "required|string|max:255",
             'description' => "required|string",
+            'department_id'=>"required"
         ]);
         $dept = Department::create([
             'name' => $request->name,
@@ -91,7 +101,7 @@ class DepartmentsController extends Controller
         ]);
 
         $request->session()->flash('success', 'Department has been successfully created!');
-        return redirect()->route('departments');
+        return redirect()->route('departments.details');
     }
 
     /*
@@ -104,24 +114,59 @@ class DepartmentsController extends Controller
      */
     public function destroy($id)
     {
-        //
         $dept = Department::findOrFail($id);
-        if ($dept->users()->exists()) {
-            request()->session()->flash('error', 'Can not delete department that contains users!');
-            return redirect()->route('departments.details');
-        } else {
-            DB::table("departments")->where("parent_id", $id)->delete();
-            $dept->delete();
-            request()->session()->flash('success', 'Department record has been successfully deleted');
-            return redirect()->route('departments.details');
+        if ($dept->deleted == 0) {
+
+            $children = $this->getChildren($dept);
+            if($this->contains($children)==0){
+                request()->session()->flash('error', 'Can not delete department that contains users!');
+                return redirect()->route('departments.details');
+            }else{
+                foreach($children as $item){
+                    $item->deleted=1;
+                    $item->save();
+                }
+                request()->session()->flash('success', 'Department has been successfully deleted!');
+                return redirect()->route('departments.details');
+
+            }
+            
         }
+    }
+
+    
+
+    private function getChildren($department)
+    {
+        $departments = collect([$department]);
+        foreach ($department->children as $dept) {
+            $departments = $departments->merge($this->getChildren($dept));
+        }
+        return $departments;
+    }
+
+    private function contains($dept){
+        foreach($dept as $item){
+            if ($item->users()->exists()) {
+                return 0;
+                break;
+            }
+        }
+        return 1;
     }
 
     public function users($id)
     {
 
-        $users = User::where("department_id", $id)->get();
+        $dept = Department::findOrFail($id);
+        if($dept->deleted==0){
+
+        $users = User::where("department_id", $id)->where('deleted', 0)->get();
 
         return view("admin.department.employee", ["users" => $users]);
+        }else{
+            request()->session()->flash('error', 'This department does not exist');
+            return redirect()->route('departments.details');
+        }
     }
 }

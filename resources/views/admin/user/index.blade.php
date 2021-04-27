@@ -19,28 +19,22 @@
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
-                                <th>Id</th>
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Age</th>
                                 <th>Department</th>
                                 <th>Salary</th>
-                                <th>Registered at</th>
-                                <th>Updated at</th>
                                 <th>Edit/Delete</th>
                             </tr>
 
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>Id</th>
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Age</th>
                                 <th>Department</th>
                                 <th>Salary</th>
-                                <th>Registered at</th>
-                                <th>Updated at</th>
                                 <th>Edit/Delete</th>
                             </tr>
                         </tfoot>
@@ -49,14 +43,11 @@
                             @foreach ($users as $user)
 
                                 <tr>
-                                    <td>{{ $user->id }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>{{ $user->age }}</td>
                                     <td>{{ $user->department->name }}</td>
                                     <td>{{ $user->salary }}</td>
-                                    <td>{{ $user->created_at->diffForhumans() }}</td>
-                                    <td>{{ $user->updated_at->diffForhumans() }}</td>
                                     <td>
                                         <a href="{{ route('admin.user.edit', $user->id) }}"
                                             class="btn btn-flat btn-info  btn-sm">Edit</a>

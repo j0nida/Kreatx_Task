@@ -8,7 +8,7 @@
                 <div class="col-lg-6 col-md-8 mx-auto">
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h5 class="text-center mt-2">Add new employee</h5>
+                            <h5 class="text-center mt-2">Add new department</h5>
                         </div>
 
                         <form action="{{ route('department.store') }}" method="POST" enctype="multipart/form-data">

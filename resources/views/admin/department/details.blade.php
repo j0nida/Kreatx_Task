@@ -11,20 +11,16 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>Id</th>
                             <th>Name</th>
                             <th>Description</th>
-                            <th>Updated</th>
                             <th>Edit / Delete</th>
                         </tr>
 
                     </thead>
                     <tfoot>
                         <tr>
-                            <th class="searchable">Id</th>
                             <th class="searchable">Name</th>
                             <th class="searchable">Description</th>
-                            <th>Updated</th>
                             <th>Edit / Delete</th>
                         </tr>
                     </tfoot>
@@ -33,10 +29,8 @@
                         @foreach ($depts as $dept)
 
                             <tr>
-                                <td>{{ $dept->id }}</td>
                                 <td>{{ $dept->name }}</td>
                                 <td>{{ $dept->description }}</td>
-                                <td>{{ $dept->updated_at->diffForhumans() }}</td>
                                 <td>
                                     <a href="{{ route('admin.dept.edit', $dept->id) }}"
                                         class="btn btn-flat btn-info  btn-sm">Edit</a>

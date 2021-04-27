@@ -54,30 +54,6 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="department_id" class="col-md-4 col-form-label text-md-right">{{ __('Department') }}</label>
-
-                            <div class="col-md-6">
-                                <select name="department_id" class="form-control">
-                                    <option hidden disabled selected value> -- select an option -- </option>
-                                    @foreach ($departments as $department)
-                                        <option value="{{ $department->id }}"
-                                            @if (old('department_id') == $department->id)
-                                                selected
-                                            @endif    
-                                        >
-                                            {{ $department->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('department')
-                                <div class="text-danger">
-                                    Please select a valid option
-                                </div>
-                                @enderror
-                            </div>
-                        </div> 
-
-                        <div class="form-group row">
                             <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
 
                             <div class="col-md-6">

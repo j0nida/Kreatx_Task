@@ -18,6 +18,7 @@ class CreateDepartmentsTable extends Migration
             $table->id();
             $table->string("name");
             $table->text('description');
+            $table->boolean('deleted')->default('0');
             $table->integer('parent_id')->default(NULL)->nullable();
             $table->timestamps();
         });

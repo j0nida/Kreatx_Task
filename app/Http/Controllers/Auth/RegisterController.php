@@ -9,6 +9,7 @@ use App\Models\Department;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class RegisterController extends Controller
 {
@@ -53,7 +54,12 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:255',
+                Rule::unique('users')
+                ->where(function ($query) {
+                    return $query->where('deleted', 0);
+                })
+            ],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             "age"=>["required","numeric","min:18","max:60"],
         ]);
@@ -72,13 +78,11 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             "age"=>$data["age"],
-            'department_id'=>$data['department_id'],
         ]);
     }
 
     public function showRegistrationForm()
     {
-    $departments = Department::all();
-    return view("auth.register", ["departments"=>$departments]);
+    return view("auth.register");
     }
 }

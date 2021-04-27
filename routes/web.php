@@ -49,12 +49,12 @@ Route::middleware("admin")->group(function () {
 });
 
 //Employee routes
-Route::middleware("employee")->group(function () {
+Route::middleware("employee","active")->group(function () {
     Route::get("/employee", [App\Http\Controllers\User\UsersController::class, "index"])->name("employee");
-    Route::get("/employee/{user}/profile", [App\Http\Controllers\User\UsersController::class, "show"])->name("employee.profile");
-    Route::get("/employee/{user}/edit", [App\Http\Controllers\User\UsersController::class, "edit"])->name("employee.edit");
-    Route::put("/employee/{user}/update", [App\Http\Controllers\User\UsersController::class, "update"])->name("employee.update");
-    Route::delete("/employee/{user}/delete", [App\Http\Controllers\User\UsersController::class, "destroy"])->name("employee.delete");
+    Route::get("/employee/profile", [App\Http\Controllers\User\UsersController::class, "show"])->name("employee.profile");
+    Route::get("/employee/edit", [App\Http\Controllers\User\UsersController::class, "edit"])->name("employee.edit");
+    Route::put("/employee/update", [App\Http\Controllers\User\UsersController::class, "update"])->name("employee.update");
+    Route::delete("/employee/delete", [App\Http\Controllers\User\UsersController::class, "destroy"])->name("employee.delete");
     Route::get("/chats", [App\Http\Controllers\User\ChatsController::class, "index"])->name("chats");
     Route::get("/messages", [App\Http\Controllers\User\ChatsController::class, "get_all_messages"])->name("messages");
 

@@ -22,15 +22,20 @@ class AdminsController extends Controller
     {
            
         return view("admin.dashboard",[
-            'deptCount' => Department::count(),   
-            'userCount' => User::count()
+            'deptCount' => Department::where('deleted',0)->count(),   
+            'userCount' => User::where('deleted',0)->count()
         ]);
     }
 
     public function profile()
     {
-
-        return view('admin.profile', ['user' => Auth::user()]);
+        // if(Auth::user()->deleted==0){
+            return view('admin.profile', ['user' => Auth::user()]);
+        // }
+        // else{
+        //     request()->session()->flash('error', 'This account has been deleted');
+        //     return redirect()->route('login');
+        // }
     }
 
     public function edit()
@@ -49,7 +54,7 @@ class AdminsController extends Controller
     {
         //
 
-        $user = User::findOrFail(Auth::user()->id);
+        $user = User::findOrFail(Auth::id());
         $this->validate($request, [
             'name' => ['string', 'max:255'],
             'email' => [
@@ -70,15 +75,15 @@ class AdminsController extends Controller
         return redirect()->route('admin.profile');
     }
 
-    public function destroy()
-    {
-        //
-        $user = User::findOrFail(Auth::user()->id);
+    // public function destroy()
+    // {
+    //     //
+    //     $user = User::findOrFail(Auth::user()->id);
 
-        $user->delete();
+    //     $user->delete();
 
-        request()->session()->flash('success', 'Your account has been successfully deleted');
-        return redirect()->route('login');
-    }
+    //     request()->session()->flash('success', 'Your account has been successfully deleted');
+    //     return redirect()->route('login');
+    // }
 
 }

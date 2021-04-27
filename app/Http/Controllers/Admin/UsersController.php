@@ -17,20 +17,25 @@ class UsersController extends Controller
     //
     public function index()
     {
-        $users = User::paginate(10);
+        $users = User::where('deleted',0)->paginate(10);
         return view("admin.user.index", ['users' => $users]);
     }
 
     public function edit($user_id)
     {
-
+        $user=User::findOrFail($user_id);
+        if($user->deleted==0){
         return view(
             "admin.user.edit",
             [
-                'user' => User::findOrFail($user_id),
-                'departments' => Department::all(),
+                'user' => $user,
+                'departments' => Department::where('deleted',0)->get(),
             ]
         );
+        }else{
+            request()->session()->flash('error', 'This user does not exist');
+            return redirect()->route('users');
+        }
     }
 
 
@@ -43,7 +48,7 @@ class UsersController extends Controller
     {
         //
         return view("admin.user.create", [
-            'departments' => Department::all(),
+            'departments' => Department::where('deleted',0)->get(),
         ]);
     }
 
@@ -57,13 +62,19 @@ class UsersController extends Controller
     {
         //
         $this->validate($request, [
-            'name' => "required|string|max:255",
-            'email' => "required|string|email|unique:users",
-            "age" => "required|numeric|min:18|max:60",
-            "salary" => "required|numeric",
+            'name' => 'required','string','max:255',
+            'email' => [
+                'required','string', 'email',
+                Rule::unique('users')
+                ->where(function ($query) {
+                    return $query->where('deleted', 0);
+                })
+            ],
+            "age" => 'required','numeric','min:18','max:60',
+            "salary" => 'required','numeric',
             'role' => 'required',
             'department_id' => 'required',
-            'password' => 'required|confirmed|min:8'
+            'password' => 'required','confirmed','min:8'
         ]);
         $user = User::create([
             'name' => $request->name,
@@ -91,11 +102,17 @@ class UsersController extends Controller
     {
         //
         $user = User::findOrFail($id);
+        if($user->deleted==0){
+            
         $this->validate($request, [
             'name' => ['string', 'max:255'],
             'email' => [
                 'string', 'email',
-                Rule::unique('users')->ignore($user), "nullable"
+                Rule::unique('users')
+                ->where(function ($query) {
+                    return $query->where('deleted', 0);
+                })
+                ->ignore($user), "nullable"
             ],
             "age" => ["numeric", "min:18", "max:60"],
             "salary" => ["numeric"],
@@ -109,6 +126,7 @@ class UsersController extends Controller
         $user->save();
         $request->session()->flash('success', 'User\'s profile has been successfully updated!');
         return redirect()->route('users');
+        }
     }
 
     /**
@@ -121,10 +139,15 @@ class UsersController extends Controller
     {
         //
         $user = User::findOrFail($id);
+        if($user->deleted==0){
 
-        $user->delete();
-
+        $user->deleted=1;
+        $user->save();
         request()->session()->flash('success', 'Employee record has been successfully deleted');
         return redirect()->route('users');
+        }else{
+            request()->session()->flash('error', 'This user does not exist');
+            return redirect()->route('users');
+        }
     }
 }

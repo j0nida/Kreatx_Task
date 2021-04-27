@@ -30,8 +30,10 @@
                                 </tr>
 
                                 <tr>
+                                    @if ($user->department)
                                     <td>Department</td>
                                     <td>{{ $user->department->name }}</td>
+                                    @endif
                                 </tr>
 
                                 <tr>
